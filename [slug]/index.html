@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Envie sua ideia</title>
+  <style>
+    body { background:#0f0f0f; color:#fff; font-family:Arial; display:flex; align-items:center; justify-content:center; height:100vh }
+    .box { background:#1c1c1c; padding:25px; border-radius:14px; width:90%; max-width:500px }
+    textarea, button { width:100%; padding:12px; margin-top:12px; border-radius:10px; border:none }
+    textarea { background:#2a2a2a; color:#fff }
+    button { background:#5865F2; color:#fff; font-weight:bold; cursor:pointer }
+  </style>
+</head>
+<body>
+  <div class="box" id="app"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const webhook = decodeURIComponent(params.get('w'));
+    const nome = location.pathname.replace('/', '');
+
+    if (!webhook) {
+      document.getElementById('app').innerHTML = '<h3>Link inválido 💀</h3>';
+    } else {
+      document.getElementById('app').innerHTML = `
+        <h2>Envie sua ideia pra ${nome}</h2>
+        <textarea id="msg" placeholder="escreve aí..."></textarea>
+        <button onclick="send()">Enviar</button>
+      `;
+    }
+
+    function send() {
+      const msg = document.getElementById('msg').value;
+      if (!msg) return alert('manda algo aí');
+      
+      fetch(webhook, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ content: msg })
+      });
+
+      document.getElementById('app').innerHTML =
+        '<h2>Loading... ⏳</h2><p>Ideia enviada 😎</p>';
+    }
+  </script>
+</body>
+</html>
