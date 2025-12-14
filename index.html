@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cookie • Dashboard</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#0f0f0f; color:#fff }
+    .box { max-width:600px; margin:60px auto; background:#1c1c1c; padding:25px; border-radius:14px }
+    input, textarea, button { width:100%; padding:12px; margin-top:12px; border-radius:10px; border:none }
+    input, textarea { background:#2a2a2a; color:#fff }
+    button { background:#5865F2; color:#fff; font-weight:bold; cursor:pointer }
+    .link { background:#111; padding:10px; border-radius:8px; word-break:break-all }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Dashboard</h2>
+    <p>Cria teu site de ideias em 10s 😈</p>
+
+    <input id="nome" placeholder="nome-do-site" />
+    <input id="webhook" placeholder="Webhook do Discord" />
+
+    <button onclick="gerar()">Criar site</button>
+
+    <div id="out" style="display:none">
+      <h3>Link do site</h3>
+      <div class="link" id="link"></div>
+      <button onclick="copy()">Copiar link</button>
+    </div>
+  </div>
+
+  <script>
+    function gerar() {
+      const nome = document.getElementById('nome').value.trim();
+      const webhook = encodeURIComponent(document.getElementById('webhook').value.trim());
+      if (!nome || !webhook) return alert('preenche tudo aí lil bro');
+
+      const url = `${location.origin}/${nome}?w=${webhook}`;
+      document.getElementById('link').innerText = url;
+      document.getElementById('out').style.display = 'block';
+    }
+
+    function copy() {
+      navigator.clipboard.writeText(document.getElementById('link').innerText);
+      alert('copiado, btw');
+    }
+  </script>
+</body>
+</html>
