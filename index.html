@@ -65,15 +65,29 @@ word-break:break-all;
 </div>
 <script>
 function criar(){
-const n=nome.value.trim();
-const w=webhook.value.trim();
-if(!n||!w)return alert("Preencha, por favor");
-localStorage.setItem("webhook_"+n,w);
-link.innerText=location.origin+"/"+n;
-out.style.display="block";
+  const nomeInput = document.getElementById("nome");
+  const webhookInput = document.getElementById("webhook");
+
+  const n = nomeInput.value.trim();
+  const w = webhookInput.value.trim();
+
+  if(!n || !w){
+    alert("preenche tudo aí lil bro");
+    return;
+  }
+
+  localStorage.setItem("webhook_" + n, w);
+
+  const url = location.origin + "/" + n;
+  document.getElementById("link").innerText = url;
+  document.getElementById("out").style.display = "block";
 }
+
 function copiar(){
-navigator.clipboard.writeText(link.innerText);
-alert("Link copiado!");
+  navigator.clipboard.writeText(
+    document.getElementById("link").innerText
+  );
+  alert("link copiado 😎");
 }
-</html>
+</script>
+
